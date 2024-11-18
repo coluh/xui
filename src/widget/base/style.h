@@ -3,6 +3,11 @@
 
 #include "../../../include/xui.h"
 
+#define PADDINGS_H(p) ((p).padding.l + (p).padding.r)
+#define BORDERS_H(p) ((p).border.l + (p).border.r)
+#define PADDINGS_V(p) ((p).padding.t + (p).padding.b)
+#define BORDERS_V(p) ((p).border.t + (p).border.b)
+
 typedef struct xuiStyle {
 	int fontSize;
 	Align align;

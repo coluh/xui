@@ -44,8 +44,15 @@ Widget xuiCreateLinearLayout(Orientation orient, Widget children[], int count) {
 	ll->children = callo(count, sizeof(xuiWidget*));
 	for (int i = 0; i < count; i++) {
 		ll->children[i] = children[i];
-		children[i]->parent = (xuiWidget*)ll;
-		((xuiStyle*)(&children[i][1]))->bgColor = xuiColor(200, 240, 240, 255);
+		xuiWidget *v = children[i];
+		v->parent = (xuiWidget*)ll;
+		((xuiStyle*)(v+1))->bgColor = xuiColor(200, 240, 240, 255);
+		if (v->type == Widget_Separator) {
+			if (orient == Orientation_Horizontal)
+				v->height = DEFAULT_GAP;
+			else
+				v->width = DEFAULT_GAP;
+		}
 	}
 
 	return (xuiWidget *)ll;

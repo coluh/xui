@@ -68,6 +68,7 @@ typedef struct Insets {
 #define xuiInsets(t, l, b, r) ((Insets){(t),(l),(b),(r)})
 
 typedef void (*OnClickCallback)(Widget v, void *userData);
+typedef void (*OnSelectedCallback)(Widget v, bool isSelected, void *userData);
 typedef const char *(*ToStringCallback)(void *item);
 
 /*** util Macros ***/
@@ -82,9 +83,9 @@ Widget xuiCreateCheckBox(const char *text, bool selected);
 // Widget xuiCreateDelimiter();
 #define DropdownMenu(itemType, toString) xuiCreateDropdownMenu(sizeof(itemType), toString)
 Widget xuiCreateDropdownMenu(int itemSize, ToStringCallback callback);
-void xuiDropdownMenuAddData(Widget dropdownMenu, void *data, int count);
-#define HyperLink(link) xuiCreateHyperLink(link)
-Widget xuiCreateHyperLink(const char *link);
+void xuiDropdownMenuAddData(Widget dropdownMenu, void *dataList, int count);
+#define HyperLink(link) xuiCreateText(link)
+// Widget xuiCreateHyperLink(const char *link);
 // Widget xuiCreateImageView(const char *imagePath);
 #define Label(text) xuiCreateLabel(text)
 Widget xuiCreateLabel(const char *text);
@@ -99,8 +100,8 @@ float xuiSliderGetValue(Widget slider);
 #define Text(text) xuiCreateText(text)
 Widget xuiCreateText(const char *text);
 // Widget xuiCreateTextField();
-#define ToggleButton(text, selected) xuiCreateToggleButton(text, selected)
-Widget xuiCreateToggleButton(const char *text, bool selected);
+#define ToggleButton(text, callback) xuiCreateToggleButton(text, callback)
+Widget xuiCreateToggleButton(bool selected, OnSelectedCallback callback);
 
 /*** Layouts (and Wrappers) ***/
 #define LinearLayout(orient, ...) xuiCreateLinearLayout(orient, (Widget[])__VA_ARGS__, ARRAY_LEN((Widget[])__VA_ARGS__))

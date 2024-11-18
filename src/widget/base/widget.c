@@ -13,6 +13,20 @@ static struct WidgetNode {
 	struct WidgetNode *next;
 } *pool;
 
+static struct WidgetNode *iter;
+
+xuiWidget *iterWidget() {
+	iter = pool;
+	return iter->v;
+}
+
+xuiWidget *nextWidget() {
+	iter = iter->next;
+	if (iter == NULL)
+		return NULL;
+	return iter->v;
+}
+
 void *getDefaultWidget(int size) {
 	static int id = 0;
 
@@ -56,6 +70,20 @@ void renderText(xuiWidget *v, SDL_Texture *texture) {
 
 	int x = v->x + style->border.l + style->padding.l;
 	int y = v->y + style->border.t + style->padding.t;
+
+	int width, height;
+	SDL_QueryTexture(texture, NULL, NULL, &width, &height);
+
+	SDL_RenderCopy(renderer, texture, NULL, &(SDL_Rect){x, y, width, height});
+}
+
+void renderTextOff(xuiWidget *v, SDL_Texture *texture, int offx, int offy) {
+	xuiStyle *style = (xuiStyle*)(v+1);
+
+	int x = v->x + style->border.l + style->padding.l;
+	int y = v->y + style->border.t + style->padding.t;
+	x += offx;
+	y += offy;
 
 	int width, height;
 	SDL_QueryTexture(texture, NULL, NULL, &width, &height);

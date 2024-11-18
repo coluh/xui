@@ -54,7 +54,11 @@ void xuiStartScene(Scene scene) {
 		SDL_WaitEvent(&event);{
 			if (event.type == SDL_QUIT)
 				running = false;
-			// ...
+			if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_RESIZED) {
+				scene->root->width = event.window.data1;
+				scene->root->height = event.window.data2;
+				calculatePosition(scene->root);
+			}
 			scene->root->handler(scene->root, &event);
 		}
 

@@ -8,6 +8,8 @@
 #define DEFAULT_BGCOLOR		(Color){0,0,32,255}
 #define DEFAULT_FGCOLOR		(Color){220,255,240,255}
 #define DEFAULT_GAP		20
+#define DEFAULT_BLANKSIZE	40
+#define DEFAULT_BORDERSIZE	5
 
 #define MAX_FONT_SIZE	72
 

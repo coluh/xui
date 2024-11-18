@@ -5,7 +5,7 @@
 #include "util/common.h"
 #include "util/log.h"
 
-#define NDEBUG
+#define NDEBUG 114514
 
 static int getMaxWidth(xuiWidget **children, int childrenCount) {
 	int max = 0;
@@ -77,7 +77,7 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 	int totalWidth = getTotalWidth(ll->children, ll->childrenCount);
 	int totalHeight = getTotalHeight(ll->children, ll->childrenCount);
 	int maxWidth = getMaxWidth(ll->children, ll->childrenCount);
-	int maxHeight = getMaxWidth(ll->children, ll->childrenCount);
+	int maxHeight = getMaxHeight(ll->children, ll->childrenCount);
 
 	int x = ll->base.x + ll->style.padding.l;
 	int y = ll->base.y + ll->style.padding.t;
@@ -90,9 +90,9 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 		if (ll->base.height == 0)
 			ll->base.height = maxHeight + ll->style.padding.t + ll->style.padding.b;
 
+		int availableHeight = ll->base.height - ll->style.padding.t - ll->style.padding.b;
 		for (int i = 0; i < ll->childrenCount; i++) {
 			xuiWidget *v = ll->children[i];
-			int availableHeight = ll->base.height - ll->style.padding.t - ll->style.padding.b;
 			Align align = ((xuiStyle*)(v+1))->align;
 			if (align == Align_Top)
 				updateY(v, y);
@@ -101,6 +101,8 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 			else {
 				updateY(v, y + (availableHeight - v->height) / 2);
 			}
+			if (v->type == Widget_Separator)
+				v->height = availableHeight;
 		}
 
 		int availableWidth = ll->base.width - ll->style.padding.l - ll->style.padding.r;
@@ -178,6 +180,8 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 			else {
 				updateX(v, x + (availableWidth - v->width) / 2);
 			}
+			if (v->type == Widget_Separator)
+				v->width = availableWidth;
 		}
 
 		int availableHeight = ll->base.height - ll->style.padding.t - ll->style.padding.b;

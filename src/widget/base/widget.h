@@ -6,9 +6,15 @@
 
 typedef enum xuiWidgetType {
 	Widget_Button,
+	Widget_CheckBox,
+	Widget_DropdownMenu,
 	Widget_Label,
 	Widget_LinearLayout,
+	Widget_RadioButton,
+	Widget_Separator,
+	Widget_Slider,
 	Widget_Text,
+	Widget_ToggleButton,
 } xuiWidgetType;
 
 #ifndef NDEBUG
@@ -35,5 +41,9 @@ void *getDefaultWidget(int size);
 void renderBackground(xuiWidget *v);
 void renderBorderBackground(xuiWidget *v);
 void renderText(xuiWidget *v, SDL_Texture *texture);
+void renderTextOff(xuiWidget *v, SDL_Texture *texture, int offx, int offy);
+
+xuiWidget *iterWidget();
+xuiWidget *nextWidget();
 
 #endif
