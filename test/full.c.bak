@@ -22,14 +22,16 @@ const char *toStringMyData(void *item) {
 
 int main() {
 
+	xuiInit();
+
 	Widget leftPane = LinearLayout(Orientation_Vertical, {
-		xuiCreateLabel("Hello, XUI!"),
-		xuiCreateSeparator(),
-		xuiCreateToggleButton("Night Mode", false),
-		xuiCreateText("This is a description."),
+		Label("Hello, XUI!"),
+		Separator(),
+		ToggleButton("Night Mode", false),
+		Text("This is a description."),
 		LinearLayout(Orientation_Horizontal, {
-			xuiCreateLabel("Detailed Info:"),
-			xuiCreateHyperLink("www.example.com"),
+			Label("Detailed Info:"),
+			HyperLink("www.example.com"),
 		}),
 	});
 
@@ -42,31 +44,32 @@ int main() {
 
 	Widget rightPane = LinearLayout(Orientation_Vertical, {
 		LinearLayout(Orientation_Horizontal, {
-			xuiCreateLabel("Oh, buttons:"),
-			xuiCreateButton("Click me", hi),
-			xuiCreateButton("Click him", hi),
+			Label("Oh, buttons:"),
+			Button("Click me", hi),
+			Button("Click him", hi),
 		}),
-		xuiCreateCheckBox("CheckBox Enabled", true),
+		CheckBox("CheckBox Enabled", true),
 		LinearLayout(Orientation_Horizontal, {
-			xuiCreateLabel("Look at the Dropdown menu~"),
+			Label("Look at the Dropdown menu~"),
 			dropdownMenu,
 		}),
-		xuiCreateText("Choose one of them:"),
+		Text("Choose one of them:"),
 		LinearLayout(Orientation_Horizontal, {
-			xuiCreateRadioButton("C", 1, 114),
-			xuiCreateRadioButton("Java", 0, 114),
-			xuiCreateRadioButton("Rust", 0, 114),
+			RadioButton("C", 1, 114),
+			RadioButton("Java", 0, 114),
+			RadioButton("Rust", 0, 114),
 		}),
-		xuiCreateText("Slider~~~"),
-		xuiCreateSlider(20, 100, 5),
+		Text("Slider~~~"),
+		Slider(20, 100, 5),
 	});
-	Widget rightPaneWrapper = xuiCreateScrollPane(rightPane);
+	Widget rightPaneWrapper = ScrollPane(rightPane);
 
 	Widget root = SplitPane(Orientation_Horizontal, {
 		leftPane, rightPane,
 	});
 
-	Scene scene = xuiCreateScene(root);
+	Scene scene = Scene(root);
+
 	xuiSetSceneTitle(scene, "XUI Example");
 	xuiStartScene(scene);
 

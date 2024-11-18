@@ -1,6 +1,16 @@
-#ifndef XUI_DEFAULT_H
-#define XUI_DEFAULT_H
+#ifndef XUI_default_h
+#define XUI_default_h
 
-#define DEFAULT_FONT_SIZE 48
+#define DEFAULT_FONT_PATH	"/home/coluh/coin/little/FandolHei-Regular.otf"
+#define DEFAULT_FONT_SIZE	48
+#define DEFAULT_WINDOW_WIDTH	1000
+#define DEFAULT_WINDOW_HEIGHT	500
+#define DEFAULT_BGCOLOR		(Color){0,0,32,255}
+#define DEFAULT_FGCOLOR		(Color){220,255,240,255}
+#define DEFAULT_GAP		20
+
+#define MAX_FONT_SIZE	72
+
+#define FPS 60
 
 #endif

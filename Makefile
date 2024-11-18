@@ -9,6 +9,8 @@ srcs := $(shell find src/ -name "*.c")
 objs := $(srcs:.c=.o)
 lib := build/libxui.a
 
+.PHONY: all test clean
+
 all: $(lib)
 
 $(lib): $(objs)
@@ -20,10 +22,9 @@ tests := $(test_srcs:.c=.out)
 
 test/%.out: test/%.c $(lib)
 	$(CC) $^ $(CFLAGS) -o $@
-	@echo "Test $@"
-	./$@
 
 test: $(tests)
+	for t in $^; do echo "Testing $$t:" && ./$$t; done
 
 clean:
 	rm -f $(objs) $(tests) bin/* build/*

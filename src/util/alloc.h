@@ -1,5 +1,5 @@
-#ifndef XUI_UTIL_ALLOC_H
-#define XUI_UTIL_ALLOC_H
+#ifndef XUI_util_alloc_h
+#define XUI_util_alloc_h
 
 #include <stdio.h>
 #include <stdlib.h>

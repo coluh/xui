@@ -1,5 +1,5 @@
-#ifndef XUI_UTIL_LOG_H
-#define XUI_UTIL_LOG_H
+#ifndef XUI_util_log_h
+#define XUI_util_log_h
 
 #include <stdio.h>
 
@@ -39,6 +39,8 @@ const char *getTimeFormat(const char *fmt);
 	} \
 } while (0)
 
+#define Cannot(condition) Assert(!(condition), #condition)
+
 #define Debug(msg, args...) do { \
 	printf(CSIM_DEBUG "Debug:" CSI_END); \
 	printf(" "); \
@@ -47,18 +49,19 @@ const char *getTimeFormat(const char *fmt);
 } while (0)
 
 #define DebugPrint(msg, args...) do { \
-	printf(CSIM_FILE __FILE__ CSI_END ":%d in " CSIM_FUNC "%s" CSI_END ": ", __LINE__, __FUNCTION__ ); \
+	printf(CSIM_FILE __FILE__ ":%d" CSI_END " in " CSIM_FUNC "%s" CSI_END ": ", __LINE__, __FUNCTION__ ); \
 	printf(msg, ##args); \
 	printf("\n"); \
 } while (0)
 
 #define Error(msg, args...) do { \
-	printf(CSIM_FILE __FILE__ CSI_END ":%d in " CSIM_FUNC "%s" CSI_END ": ", __LINE__, __FUNCTION__ ); \
+	printf(CSIM_FILE __FILE__ ":%d" CSI_END " in " CSIM_FUNC "%s" CSI_END ": ", __LINE__, __FUNCTION__ ); \
 	printf(CSIM_ERROR "Error:" CSI_END); \
 	printf(" "); \
 	printf(msg, ##args); \
 	printf("\n"); \
 } while (0)
 
+#define NotImplemented() DebugPrint("Not Implemented")
 
 #endif
