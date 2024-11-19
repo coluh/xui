@@ -35,9 +35,9 @@ void xuiSetProperty(Widget widget, Property property, int *value);
 typedef enum Align {
 	Align_Left	= 1 << 0,
 	Align_Right	= 1 << 1,
-	Align_Center	= 3,
 	Align_Top	= 1 << 2,
 	Align_Bottom	= 1 << 3,
+	Align_Center	= 1 | 2 | 4 | 8,
 } Align;
 
 typedef enum Arrange {

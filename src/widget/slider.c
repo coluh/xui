@@ -92,6 +92,7 @@ Widget xuiCreateSlider(float min, float max, float step) {
 	s->base.type = Widget_Slider;
 	s->base.render = render;
 	s->base.handler = handler;
+	s->style.align = Align_Left | Align_Right;
 
 	s->min = min;
 	s->max = max;

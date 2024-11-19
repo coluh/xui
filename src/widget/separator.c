@@ -25,6 +25,8 @@ Widget xuiCreateSeparator() {
 	s->base.render = render;
 	s->base.handler = handler;
 
+	s->style.align = Align_Center;
+
 	return (xuiWidget *)s;
 }
 

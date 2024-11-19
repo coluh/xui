@@ -1,4 +1,5 @@
 #include "calculate.h"
+#include <stdbool.h>
 #include "widget/base/style.h"
 #include "widget/base/widget.h"
 #include "widget/linearlayout.h"
@@ -73,14 +74,34 @@ static void updateY(xuiWidget *widget, int newY) {
 	}
 }
 
+static bool hasGrow(Orientation orient, xuiWidget **children, int childrenCount) {
+	if (orient == Orientation_Horizontal) {
+		for (int i = 0; i < childrenCount; i++) {
+			xuiWidget *v = children[i];
+			xuiStyle *style = (xuiStyle*)(v+1);
+			if ((style->align & Align_Left) && (style->align & Align_Right))
+				return true;
+		}
+		return false;
+	} else {
+		for (int i = 0; i < childrenCount; i++) {
+			xuiWidget *v = children[i];
+			xuiStyle *style = (xuiStyle*)(v+1);
+			if ((style->align & Align_Top) && (style->align & Align_Bottom))
+				return true;
+		}
+		return false;
+	}
+}
+
 static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 	int totalWidth = getTotalWidth(ll->children, ll->childrenCount);
 	int totalHeight = getTotalHeight(ll->children, ll->childrenCount);
 	int maxWidth = getMaxWidth(ll->children, ll->childrenCount);
 	int maxHeight = getMaxHeight(ll->children, ll->childrenCount);
 
-	int x = ll->base.x + ll->style.padding.l;
-	int y = ll->base.y + ll->style.padding.t;
+	int x = ll->base.x + ll->style.border.l + ll->style.padding.l;
+	int y = ll->base.y + ll->style.border.t + ll->style.padding.t;
 
 	Cannot(ll->childrenCount < 1);
 
@@ -90,22 +111,39 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 		if (ll->base.height == 0)
 			ll->base.height = maxHeight + ll->style.padding.t + ll->style.padding.b;
 
-		int availableHeight = ll->base.height - ll->style.padding.t - ll->style.padding.b;
+		int availableHeight = ll->base.height - BORDERS_V(ll->style) - PADDINGS_V(ll->style);
 		for (int i = 0; i < ll->childrenCount; i++) {
 			xuiWidget *v = ll->children[i];
 			Align align = ((xuiStyle*)(v+1))->align;
-			if (align == Align_Top)
+			if (align & Align_Top) {
 				updateY(v, y);
-			else if (align == Align_Bottom)
+				if (align & Align_Bottom) {
+					v->height = availableHeight;
+				}
+			} else if (align & Align_Bottom) {
 				updateY(v, y + availableHeight - v->height);
-			else {
-				updateY(v, y + (availableHeight - v->height) / 2);
 			}
-			if (v->type == Widget_Separator)
-				v->height = availableHeight;
 		}
 
 		int availableWidth = ll->base.width - ll->style.padding.l - ll->style.padding.r;
+		if (hasGrow(Orientation_Horizontal, ll->children, ll->childrenCount)) {
+			int a = (PADDINGS_H(ll->style))/2;
+			for (int i = 0; i < ll->childrenCount; i++) {
+				xuiWidget *v = ll->children[i];
+				xuiStyle *style = (xuiStyle*)(v+1);
+
+				if ((style->align & Align_Left) && (style->align & Align_Right)) {
+					// you are the one who grow...
+					int width = availableWidth - (totalWidth - v->width);
+					width -= a * (ll->childrenCount - 1);
+					v->width = width;
+				}
+
+				updateX(v, x);
+				x += v->width + a;
+			};
+			return;
+		}
 		int a;
 		switch (ll->arrange) {
 		case Arrange_Start:
@@ -169,22 +207,38 @@ static void calculateLinearLayoutPosition(xuiLinearLayout *ll) {
 		if (ll->base.height == 0)
 			ll->base.height = totalHeight + (ll->childrenCount-1)*ll->gap + ll->style.padding.t + ll->style.padding.b;
 
-		int availableWidth = ll->base.width - ll->style.padding.l - ll->style.padding.r;
+		int availableWidth = ll->base.width - BORDERS_H(ll->style) - PADDINGS_H(ll->style);
 		for (int i = 0; i < ll->childrenCount; i++) {
 			xuiWidget *v = ll->children[i];
 			Align align = ((xuiStyle*)(v+1))->align;
-			if (align == Align_Left)
+			if (align & Align_Left) {
 				updateX(v, x);
-			else if (align == Align_Right)
+				if (align & Align_Right) {
+					v->width = availableWidth;
+				}
+			} else if (align & Align_Right) {
 				updateX(v, x + availableWidth - v->width);
-			else {
-				updateX(v, x + (availableWidth - v->width) / 2);
 			}
-			if (v->type == Widget_Separator)
-				v->width = availableWidth;
 		}
 
 		int availableHeight = ll->base.height - ll->style.padding.t - ll->style.padding.b;
+		if (hasGrow(Orientation_Vertical, ll->children, ll->childrenCount)) {
+			int a = (PADDINGS_V(ll->style))/2;
+			for (int i = 0; i < ll->childrenCount; i++) {
+				xuiWidget *v = ll->children[i];
+				xuiStyle *style = (xuiStyle*)(v+1);
+
+				if ((style->align & Align_Top) & (style->align & Align_Bottom)) {
+					int height = availableHeight - (totalHeight - v->height);
+					height -= a * (ll->childrenCount - 1);
+					v->height = height;
+				}
+
+				updateY(v, y);
+				y += v->height + a;
+			}
+			return;
+		}
 		int a;
 		switch (ll->arrange) {
 		case Arrange_Start:

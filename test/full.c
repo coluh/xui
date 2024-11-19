@@ -70,10 +70,13 @@ int main() {
 			RadioButton("Java", 0, 114),
 			RadioButton("Rust", 0, 114),
 		}),
-		Text("Slider~~~"),
-		Slider(20, 100, 4),
+		LinearLayout(Orientation_Horizontal, {
+			Text("Slider~~~"),
+			Slider(20, 100, 4),
+		}),
 	});
 	// Widget rightPaneWrapper = ScrollPane(rightPane);
+	setProperty(rightPane, Property_Align, Align_Left | Align_Right);
 
 	// Widget root = SplitPane(Orientation_Horizontal, {
 	Widget root = LinearLayout(Orientation_Horizontal, {
