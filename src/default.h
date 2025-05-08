@@ -1,7 +1,7 @@
 #ifndef XUI_default_h
 #define XUI_default_h
 
-#define DEFAULT_FONT_PATH	"/home/coluh/coin/little/FandolHei-Regular.otf"
+#define DEFAULT_FONT_PATH	"assets/FandolHei-Regular.otf"
 #define DEFAULT_FONT_SIZE	48
 #define DEFAULT_WINDOW_WIDTH	1000
 #define DEFAULT_WINDOW_HEIGHT	500
