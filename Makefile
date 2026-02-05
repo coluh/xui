@@ -1,31 +1,39 @@
+CC      := cc
+AR      := ar
+CFLAGS  += -I./include
+# CFLAGS  := -std=c11
+# CFLAGS  += -O2
+CFLAGS  += -Wall -Wextra
+CFLAGS  += -g -ggdb
+CFLAGS  += -lSDL2 -lSDL2_ttf -lm
 
-CC=gcc
-CFLAGS := -lSDL2 -lSDL2_ttf -lm
-CFLAGS += -I./include
-CFLAGS += -g -ggdb
-# CFLAGS += -Werror -Wall
+BUILD   := build
+LIB     := $(BUILD)/libxui.a
 
-srcs := $(shell find src/ -name "*.c")
-objs := $(srcs:.c=.o)
-lib := build/libxui.a
+SRC_C   := $(shell find src -name '*.c')
+SRC_O   := $(SRC_C:src/%.c=$(BUILD)/obj/%.o)
 
-.PHONY: all test clean
+TEST_C  := $(wildcard test/*.c)
+TEST_EXE:= $(TEST_C:test/%.c=$(BUILD)/test/%)
 
-all: $(lib)
+.PHONY: all clean test
 
-$(lib): $(objs)
-	@mkdir -p build/
-	ar -crv $@ $^
+all: $(LIB) $(TEST_EXE)
 
-test_srcs := $(shell find test/ -name "*.c")
-tests := $(test_srcs:.c=.out)
+$(LIB): $(SRC_O)
+	@mkdir -p $(dir $@)
+	$(AR) rcs $@ $^
 
-test/%.out: test/%.c $(lib)
-	$(CC) $^ $(CFLAGS) -o $@
+$(BUILD)/obj/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-test: $(tests)
-	for t in $^; do echo "Testing $$t:" && ./$$t; done
+$(BUILD)/test/%: test/%.c $(LIB)
+	@mkdir -p $(dir $@)
+	$(CC) $< $(LIB) $(CFLAGS) -o $@
+
+test: $(TEST_EXE)
+	@for t in $^; do echo "==> $$t"; $$t; done
 
 clean:
-	rm -f $(objs) $(tests) bin/* build/*
-
+	rm -rf $(BUILD)
